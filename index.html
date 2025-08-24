@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Itens - Sebo Só Ler</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    
+    <style>
+        /* Variáveis de Cores e Estilo */
+        :root {
+            --bg-color: #f8f8f8; /* Branco suave */
+            --container-bg: #ffffff;
+            --primary-color: #333333; /* Preto elegante */
+            --primary-hover: #1a1a1a;
+            --danger-color: #d9534f;
+            --danger-hover: #c9302c;
+            --success-color: #5cb85c;
+            --success-hover: #4cae4c;
+            --text-color: #333333;
+            --text-light-color: #777777;
+            --heading-color: #000000;
+            --border-color: #e0e0e0;
+            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            max-width: 1200px;
+            padding: 25px;
+            margin: 25px auto;
+            flex: 1;
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                grid-template-columns: 3fr 1fr;
+            }
+        }
+
+        .card {
+            background: var(--container-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--heading-color);
+            font-size: 2.5em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--heading-color);
+            font-size: 1.5em;
+            font-weight: 400;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .form-row > * {
+            flex-grow: 1;
+            min-width: 150px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.1);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            font-weight: 600;
+            font-size: 1em;
+            width: 100%;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button.remover {
+            background-color: var(--danger-color);
+            flex-basis: 100px;
+            padding: 12px 15px;
+            letter-spacing: normal;
+        }
+
+        button.remover:hover {
+            background-color: var(--danger-hover);
+        }
+        
+        .carrinho-item {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px 0;
+            align-items: flex-start;
+        }
+        
+        @media (min-width: 600px) {
+            .carrinho-item {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .carrinho-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .carrinho-item strong {
+            font-size: 1.1em;
+            color: var(--heading-color);
+        }
+        
+        .carrinho-item .info-detalhes {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .carrinho-item .info-detalhes span {
+            font-size: 0.9em;
+            color: var(--text-light-color);
+        }
+
+        .carrinho-item .info-detalhes strong {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .carrinho-info-valor {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .carrinho-info-valor input {
+            width: 100px;
+            text-align: right;
+            padding: 8px;
+        }
+
+        .carrinho-info-valor .detalhes-valores {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 0.9em;
+        }
+        
+        .total-container {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-top: 25px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .total-display {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5em; 
+            font-weight: 700; 
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-color);
+            margin-bottom: 12px;
+        }
+
+        .total-display strong {
+            font-weight: 700;
+        }
+        
+        .botoes-manual {
+            display: flex;
+            gap: 15px;
+            flex-direction: column;
+        }
+        
+        @media (min-width: 600px) {
+            .botoes-manual {
+                flex-direction: row;
+            }
+        }
+        
+        .botoes-manual button {
+            flex: 1;
+        }
+        
+        #botao-imprimir-cupom {
+            background-color: var(--success-color);
+        }
+
+        #botao-imprimir-cupom:hover {
+            background-color: var(--success-hover);
+        }
+        
+        #instrucoes {
+            font-size: 0.9em;
+            color: var(--text-light-color);
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .total-item-valores {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .total-item-valores span {
+            font-size: 0.9em;
+            color: var(--text-light-color);
+        }
+
+        .total-item-valores strong {
+            color: var(--text-color);
+        }
+        
+        .footer-text {
+            text-align: center;
+            margin-top: 30px;
+            padding: 10px 0;
+            color: var(--text-light-color);
+            font-size: 0.8em;
+        }
+
+        /* Estilos para o cupom de impressão */
+        .cupom-header { text-align: center; margin-bottom: 10px; }
+        .cupom-header p { margin: 0; font-family: 'Poppins', monospace; }
+        .cupom-item { border-bottom: 1px dotted #ccc; padding: 3px 0; }
+        .cupom-total { border-top: 1px solid #000; margin-top: 10px; padding-top: 5px; }
+        .cupom-total .linha { display: flex; justify-content: space-between; }
+        .aviso { text-align: center; margin-top: 15px; font-size: 10px; }
+        #barcode { display: block; margin: 10px auto; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <h2>Seu Carrinho de Compras</h2>
+            
+            <div class="form-group">
+                <h3>Adicionar Item Manualmente</h3>
+                <div class="form-row">
+                    <input type="number" id="valor-livro-manual" placeholder="Valor de Venda" step="0.01">
+                    <select id="genero-livro-manual">
+                        <option value="" disabled selected>Selecione um Gênero</option>
+                    </select>
+                </div>
+                <div class="botoes-manual">
+                    <button onclick="adicionarLivroManual()">Adicionar Item</button>
+                    <button id="botao-imprimir-cupom" style="display: none;" onclick="imprimirCupomFiscal()">Imprimir Cupom</button>
+                </div>
+            </div>
+
+            <ul id="carrinho-compras">
+            </ul>
+
+            <div class="form-group">
+                <h3>Gerenciar Cupom</h3>
+                <input type="text" id="cupom-id-input" placeholder="ID do Cupom">
+                <div class="botoes-manual">
+                    <button onclick="buscarCupom()">Buscar Cupom</button>
+                    <button onclick="salvarCupom()">Salvar Edições</button>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="lateral-panel">
+            <div class="card">
+                <div class="botoes-manual">
+                    <button onclick="atualizarTotais()">Atualizar Totais</button>
+                </div>
+            
+                <div class="total-container">
+                    <p><strong>Resumo Final do Carrinho:</strong></p>
+                    <div class="total-display">
+                        <span>Troca Livro:</span> R$ <strong id="valor-total-troca">0.00</strong>
+                    </div>
+                    <div class="total-display">
+                        <span>Troca Geral:</span> R$ <strong id="valor-total-troca-reduzida">0.00</strong>
+                    </div>
+                    <div class="total-display">
+                        <span>Compra:</span> R$ <strong id="valor-total-compra">0.00</strong>
+                    </div>
+                    <div class="total-display">
+                        <span>Venda:</span> R$ <strong id="valor-total-venda">0.00</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" id="busca-amazon">
+                <h2>Pesquisar na Amazon</h2>
+                <input type="text" id="termo-pesquisa" placeholder="Nome ou código do livro">
+                <button onclick="pesquisarNaAmazon()">Pesquisar</button>
+                <p id="instrucoes">Após a pesquisa, use o filtro "Condição" > "Usado" para ver os preços mais baixos.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CÓDIGO JAVASCRIPT ---
+        
+        // --- PORCENTAGENS DE CÁLCULO ---
+        const porcentagemTrocaLivro = 0.5; // 50%
+        const porcentagemTrocaGeral = 0.20; // 20%
+        const porcentagemCompra = 0.18;
+        
+        let idManualCounter = -1;
+        let carrinho = [];
+        const generosDisponiveis = [
+            "Auto Ajuda", "História", "Literatura Brasileira", "Ficção", "Infanto-Juvenil",
+            "Biografia", "Literatura Estrangeira", "Filosofia", "Romance", "Manga",
+            "Infantil", "HQ", "Gibis", "Revistas", "CDs", "LPs", "DVDs", "Psicologia",
+            "Religião", "Espírita"
+        ];
+
+        const carrinhoElemento = document.getElementById('carrinho-compras');
+        const valorTotalVendaElemento = document.getElementById('valor-total-venda');
+        const valorTotalCompraElemento = document.getElementById('valor-total-compra');
+        const valorTotalTrocaElemento = document.getElementById('valor-total-troca');
+        const valorTotalTrocaReduzidaElemento = document.getElementById('valor-total-troca-reduzida');
+        const botaoImprimirCupom = document.getElementById('botao-imprimir-cupom');
+
+        const termoPesquisaInput = document.getElementById('termo-pesquisa');
+        
+        const valorLivroManualInput = document.getElementById('valor-livro-manual');
+        const generoLivroManualSelect = document.getElementById('genero-livro-manual');
+        
+        const cupomIdInput = document.getElementById('cupom-id-input');
+
+        let cuponsSalvos = JSON.parse(localStorage.getItem('cuponsSalvos')) || {};
+        
+        function gerarIdUnico() {
+            return 'CUP' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        }
+
+        function preencherGenerosManuais() {
+            generosDisponiveis.sort().forEach(genero => {
+                const option = document.createElement('option');
+                option.value = genero;
+                option.textContent = genero;
+                generoLivroManualSelect.appendChild(option);
+            });
+        }
+
+        function adicionarLivroManual() {
+            const precoVendaManual = parseFloat(valorLivroManualInput.value);
+            const generoManual = generoLivroManualSelect.value;
+
+            if (isNaN(precoVendaManual) || precoVendaManual <= 0) {
+                alert("Por favor, preencha um valor de venda válido.");
+                return;
+            }
+            
+            if (!generoManual) {
+                alert("Por favor, selecione o gênero do item.");
+                return;
+            }
+
+            const valorTrocaLivro = precoVendaManual * porcentagemTrocaLivro;
+            const valorTrocaGeral = precoVendaManual * porcentagemTrocaGeral;
+            const valorCompraCalculado = precoVendaManual * porcentagemCompra;
+
+            const livroManual = {
+                id: idManualCounter--,
+                titulo: "Item Manual",
+                genero: generoManual,
+                codigoBarras: null,
+                precoVenda: precoVendaManual,
+                precoCompra: valorCompraCalculado,
+                valorTrocaLivro: valorTrocaLivro,
+                valorTrocaGeral: valorTrocaGeral
+            };
+
+            carrinho.push(livroManual);
+            atualizarCarrinho();
+            
+            valorLivroManualInput.value = '';
+            generoLivroManualSelect.value = '';
+        }
+
+        function removerDoCarrinho(idDoLivro) {
+            carrinho = carrinho.filter(livro => livro.id !== idDoLivro);
+            atualizarCarrinho();
+        }
+
+        function atualizarValoresItem(idDoLivro, novoPrecoVenda) {
+            const novoPrecoVendaFloat = parseFloat(novoPrecoVenda);
+            if (isNaN(novoPrecoVendaFloat) || novoPrecoVendaFloat < 0) return;
+
+            const livroNoCarrinho = carrinho.find(livro => livro.id === idDoLivro);
+            if (livroNoCarrinho) {
+                livroNoCarrinho.precoVenda = novoPrecoVendaFloat;
+                livroNoCarrinho.precoCompra = novoPrecoVendaFloat * porcentagemCompra;
+                livroNoCarrinho.valorTrocaLivro = novoPrecoVendaFloat * porcentagemTrocaLivro;
+                livroNoCarrinho.valorTrocaGeral = novoPrecoVendaFloat * porcentagemTrocaGeral;
+
+                document.getElementById(`troca-livro-${livroNoCarrinho.id}`).textContent = livroNoCarrinho.valorTrocaLivro.toFixed(2);
+                document.getElementById(`troca-geral-${livroNoCarrinho.id}`).textContent = livroNoCarrinho.valorTrocaGeral.toFixed(2);
+                document.getElementById(`compra-${livroNoCarrinho.id}`).textContent = livroNoCarrinho.precoCompra.toFixed(2);
+            }
+        }
+
+        function atualizarTotais() {
+            let totalVenda = 0;
+            let totalCompra = 0;
+            let totalTrocaLivro = 0;
+            let totalTrocaGeral = 0;
+            
+            carrinho.forEach(livro => {
+                totalVenda += livro.precoVenda;
+                totalCompra += livro.precoCompra;
+                totalTrocaLivro += livro.valorTrocaLivro;
+                totalTrocaGeral += livro.valorTrocaGeral;
+            });
+
+            valorTotalVendaElemento.textContent = totalVenda.toFixed(2);
+            valorTotalCompraElemento.textContent = totalCompra.toFixed(2);
+            valorTotalTrocaElemento.textContent = totalTrocaLivro.toFixed(2);
+            valorTotalTrocaReduzidaElemento.textContent = totalTrocaGeral.toFixed(2);
+
+            if (carrinho.length > 0) {
+                botaoImprimirCupom.style.display = 'block';
+            } else {
+                botaoImprimirCupom.style.display = 'none';
+            }
+        }
+
+        function atualizarCarrinho() {
+            carrinhoElemento.innerHTML = '';
+
+            carrinho.forEach(livro => {
+                const li = document.createElement('li');
+                li.className = 'carrinho-item';
+                li.innerHTML = `
+                    <div class="carrinho-info">
+                        <strong>${livro.titulo}</strong>
+                        <span style="color: var(--text-light-color);">Gênero: ${livro.genero}</span>
+                        <div class="total-item-valores">
+                            <span>Valor de Troca Livro: R$ <strong id="troca-livro-${livro.id}">${livro.valorTrocaLivro.toFixed(2)}</strong></span>
+                            <span>Valor de Troca Geral: R$ <strong id="troca-geral-${livro.id}">${livro.valorTrocaGeral.toFixed(2)}</strong></span>
+                            <span>Valor de Compra: R$ <strong id="compra-${livro.id}">${livro.precoCompra.toFixed(2)}</strong></span>
+                        </div>
+                    </div>
+                    <div class="carrinho-info-valor">
+                        <span>Preço Venda: R$</span>
+                        <input type="number" id="input-carrinho-${livro.id}" class="manual-input" value="${livro.precoVenda.toFixed(2)}" step="0.01" onchange="atualizarValoresItem(${livro.id}, this.value); atualizarTotais()">
+                        <button class="remover" onclick="removerDoCarrinho(${livro.id})">Remover</button>
+                    </div>
+                `;
+                carrinhoElemento.appendChild(li);
+            });
+            atualizarTotais();
+        }
+
+        function pesquisarNaAmazon() {
+            const termoOriginal = termoPesquisaInput.value;
+            if (termoOriginal.trim() !== '') {
+                const url = `https://www.amazon.com.br/s?k=${encodeURIComponent(termoOriginal)}`;
+                window.open(url, '_blank');
+            } else {
+                alert("Por favor, digite o nome ou código do item para pesquisar.");
+            }
+        }
+        
+        function imprimirCupomFiscal() {
+            if (carrinho.length === 0) {
+                alert("O carrinho está vazio. Adicione itens para gerar o cupom.");
+                return;
+            }
+
+            const cupomId = gerarIdUnico();
+            const dataAtual = new Date().toLocaleString('pt-BR');
+            const totalVenda = parseFloat(valorTotalVendaElemento.textContent);
+            const totalCompra = parseFloat(valorTotalCompraElemento.textContent);
+            const totalTrocaLivro = parseFloat(valorTotalTrocaElemento.textContent);
+            const totalTrocaGeral = parseFloat(valorTotalTrocaReduzidaElemento.textContent);
+
+            cuponsSalvos[cupomId] = {
+                id: cupomId,
+                data: dataAtual,
+                itens: JSON.parse(JSON.stringify(carrinho)), // Cria uma cópia profunda
+                totais: {
+                    venda: totalVenda,
+                    compra: totalCompra,
+                    trocaLivro: totalTrocaLivro,
+                    trocaGeral: totalTrocaGeral
+                }
+            };
+            localStorage.setItem('cuponsSalvos', JSON.stringify(cuponsSalvos));
+
+            const itensAgrupadosPorGenero = carrinho.reduce((acc, item) => {
+                const genero = item.genero;
+                if (!acc[genero]) {
+                    acc[genero] = {
+                        count: 0,
+                        totalCompra: 0,
+                        totalTrocaLivro: 0,
+                        totalTrocaGeral: 0
+                    };
+                }
+                acc[genero].count++;
+                acc[genero].totalCompra += item.precoCompra;
+                acc[genero].totalTrocaLivro += item.valorTrocaLivro;
+                acc[genero].totalTrocaGeral += item.valorTrocaGeral;
+                return acc;
+            }, {});
+
+            let conteudoItens = '';
+            for (const genero in itensAgrupadosPorGenero) {
+                const grupo = itensAgrupadosPorGenero[genero];
+                conteudoItens += `
+                    <div class="cupom-item">
+                        <span>Gênero: ${genero} (${grupo.count} item${grupo.count > 1 ? 's' : ''})</span><br>
+                        <span>Troca Livro: R$ ${grupo.totalTrocaLivro.toFixed(2)}</span><br>
+                        <span>Troca Geral: R$ ${grupo.totalTrocaGeral.toFixed(2)}</span><br>
+                        <span>Compra: R$ ${grupo.totalCompra.toFixed(2)}</span>
+                    </div>
+                `;
+            }
+
+            let conteudoCupom = `
+                <style>
+                    body { 
+                        font-family: 'Poppins', sans-serif; 
+                        font-size: 12px;
+                        font-weight: bold;
+                    }
+                    .cupom-header { text-align: center; margin-bottom: 10px; }
+                    .cupom-header p { margin: 0; font-family: 'Poppins', monospace; }
+                    .cupom-item { border-bottom: 1px dotted #ccc; padding: 3px 0; }
+                    .cupom-total { border-top: 1px solid #000; margin-top: 10px; padding-top: 5px; }
+                    .cupom-total .linha { display: flex; justify-content: space-between; }
+                    .aviso { text-align: center; margin-top: 15px; font-size: 10px; }
+                    #barcode { display: block; margin: 10px auto; width: 100%; }
+                </style>
+                <div class="cupom-header">
+                    <p>LIVRARIA SEBO SÓ LER</p>
+                    <p>-----------------------------------</p>
+                    <p>CUPOM DE ENTRADA DE ITENS</p>
+                    <p>${dataAtual}</p>
+                    <p>-----------------------------------</p>
+                    <p><strong>CUPOM ID: ${cupomId}</strong></p>
+                    <svg id="barcode"></svg>
+                    <p>-----------------------------------</p>
+                </div>
+                <div>
+                    <p>Itens Recebidos</p>
+                    ${conteudoItens}
+                </div>
+                <div class="cupom-total">
+                    <div class="linha">
+                        <span>TROCA LIVRO:</span>
+                        <span>R$ ${valorTotalTrocaElemento.textContent}</span>
+                    </div>
+                    <div class="linha">
+                        <span>TROCA GERAL:</span>
+                        <span>R$ ${valorTotalTrocaReduzidaElemento.textContent}</span>
+                    </div>
+                    <div class="linha">
+                        <span>COMPRA:</span>
+                        <span>R$ ${valorTotalCompraElemento.textContent}</span>
+                    </div>
+                </div>
+                <div class="aviso">
+                    <p>OBRIGADO VOLTE SEMPRE</p>
+                </div>
+            `;
+
+            const printWindow = window.open('', '_blank', 'width=300,height=500');
+            printWindow.document.write(conteudoCupom);
+            printWindow.document.close();
+            
+            // Wait for the SVG to be rendered
+            printWindow.onload = () => {
+                JsBarcode(printWindow.document.getElementById("barcode"), cupomId, {
+                    format: "CODE128",
+                    displayValue: false,
+                    width: 1,
+                    height: 20
+                });
+                printWindow.print();
+            };
+            
+            carrinho = [];
+            atualizarCarrinho();
+        }
+
+        function buscarCupom() {
+            const cupomId = cupomIdInput.value.trim().toUpperCase();
+            const cupom = cuponsSalvos[cupomId];
+
+            if (cupom) {
+                carrinho = JSON.parse(JSON.stringify(cupom.itens)); // Cria uma cópia para edição
+                atualizarCarrinho();
+                alert(`Cupom ${cupomId} carregado com sucesso!`);
+            } else {
+                alert(`Cupom com ID "${cupomId}" não encontrado.`);
+            }
+        }
+        
+        function salvarCupom() {
+            const cupomId = cupomIdInput.value.trim().toUpperCase();
+            if (cuponsSalvos[cupomId]) {
+                cuponsSalvos[cupomId].itens = JSON.parse(JSON.stringify(carrinho));
+                cuponsSalvos[cupomId].totais.venda = parseFloat(valorTotalVendaElemento.textContent);
+                cuponsSalvos[cupomId].totais.compra = parseFloat(valorTotalCompraElemento.textContent);
+                cuponsSalvos[cupomId].totais.trocaLivro = parseFloat(valorTotalTrocaElemento.textContent);
+                cuponsSalvos[cupomId].totais.trocaGeral = parseFloat(valorTotalTrocaReduzidaElemento.textContent);
+                localStorage.setItem('cuponsSalvos', JSON.stringify(cuponsSalvos));
+                alert(`Alterações no Cupom ${cupomId} salvas com sucesso!`);
+            } else {
+                alert("Nenhum cupom para salvar. Por favor, busque um cupom primeiro.");
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            preencherGenerosManuais();
+            atualizarCarrinho();
+        });
+    </script>
+    <div class="footer-text">
+        © 2025 Sebo Só Ler. Todos os direitos reservados.
+    </div>
+</body>
+</html>
