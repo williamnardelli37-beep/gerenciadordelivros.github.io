@@ -14,32 +14,169 @@
     <style>
         /* Variáveis de Cores e Estilo */
         :root {
-            --bg-color: #f8f8f8; /* Branco suave */
-            --container-bg: #ffffff;
-            --primary-color: #333333; /* Preto elegante */
-            --primary-hover: #1a1a1a;
-            --danger-color: #d9534f;
-            --danger-hover: #c9302c;
-            --success-color: #5cb85c;
-            --success-hover: #4cae4c;
-            --text-color: #333333;
-            --text-light-color: #777777;
-            --heading-color: #000000;
-            --border-color: #e0e0e0;
+            --bg-color-light: #f8f8f8;
+            --container-bg-light: rgba(255, 255, 255, 0.6);
+            --primary-color-light: rgba(51, 51, 51, 0.7);
+            --primary-hover-light: rgba(26, 26, 26, 0.8);
+            --danger-color-light: rgba(217, 83, 79, 0.7);
+            --danger-hover-light: rgba(201, 48, 44, 0.8);
+            --success-color-light: rgba(92, 184, 92, 0.7);
+            --success-hover-light: rgba(76, 174, 76, 0.8);
+            --text-color-light: #333333;
+            --text-light-color-light: #777777;
+            --heading-color-light: #000000;
+            --border-color-light: rgba(0, 0, 0, 0.1);
             --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.05);
-            --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.1);
-            --border-radius: 8px;
+            --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+            --border-radius: 20px;
+            --button-border-radius: 12px;
+            --input-bg-light: rgba(255, 255, 255, 0.4);
+
+            --bg-color-dark: #121212;
+            --container-bg-dark: rgba(30, 30, 30, 0.7);
+            --primary-color-dark: rgba(187, 134, 252, 0.7);
+            --primary-hover-dark: rgba(158, 106, 230, 0.8);
+            --danger-color-dark: rgba(207, 102, 121, 0.7);
+            --danger-hover-dark: rgba(181, 90, 106, 0.8);
+            --success-color-dark: rgba(3, 218, 198, 0.7);
+            --success-hover-dark: rgba(2, 164, 152, 0.8);
+            --text-color-dark: #e0e0e0;
+            --text-light-color-dark: #a0a0a0;
+            --heading-color-dark: #ffffff;
+            --border-color-dark: rgba(255, 255, 255, 0.1);
+            --input-bg-dark: rgba(44, 44, 44, 0.5);
+            
+            --toggle-bg-color-light: #e9e9eb;
+            --toggle-bg-color-checked: #34c759;
+            --toggle-circle-color: #ffffff;
+            --toggle-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.2);
+            --toggle-bg-color-dark: #3a3a3c;
+            --toggle-shadow-dark: 0 1px 3px rgba(0, 0, 0, 0.4);
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: background-color 0.5s ease, color 0.5s ease;
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+        }
+        
+        body.dark-mode {
+            background: linear-gradient(135deg, #1f2b45, #141c2c);
+        }
+        
+        body.light-mode {
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+        }
+        body.light-mode .card {
+            background: var(--container-bg-light);
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-color-light);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        body.light-mode input, body.light-mode select {
+            background-color: var(--input-bg-light);
+            border-color: var(--border-color-light);
+            color: var(--text-color-light);
+        }
+        body.light-mode input:focus, body.light-mode select:focus {
+            border-color: var(--primary-color-light);
+        }
+        body.light-mode button {
+            background-color: var(--primary-color-light);
+            color: white;
+        }
+        body.light-mode button:hover {
+            background-color: var(--primary-hover-light);
+            box-shadow: var(--shadow-hover);
+        }
+        body.light-mode button.remover {
+            background-color: var(--danger-color-light);
+        }
+        body.light-mode button.remover:hover {
+            background-color: var(--danger-hover-light);
+        }
+        body.light-mode #botao-imprimir-cupom {
+            background-color: var(--success-color-light);
+        }
+        body.light-mode #botao-imprimir-cupom:hover {
+            background-color: var(--success-hover-light);
+        }
+        body.light-mode .total-display {
+            color: var(--text-color-light);
+        }
+        body.light-mode .carrinho-item strong, body.light-mode h2, body.light-mode h3 {
+            color: var(--heading-color-light);
+        }
+        body.light-mode li {
+            border-bottom: 1px solid var(--border-color-light);
+        }
+        body.light-mode .total-container {
+            border-top: 1px solid var(--border-color-light);
+        }
+        body.light-mode .mode-label {
+            color: var(--text-color-light);
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+        }
+        body.dark-mode .card {
+            background: var(--container-bg-dark);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color-dark);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        body.dark-mode input, body.dark-mode select {
+            background-color: var(--input-bg-dark);
+            border-color: var(--border-color-dark);
+            color: var(--text-color-dark);
+        }
+        body.dark-mode input:focus, body.dark-mode select:focus {
+            border-color: var(--primary-color-dark);
+        }
+        body.dark-mode button {
+            background-color: var(--primary-color-dark);
+            color: white;
+        }
+        body.dark-mode button:hover {
+            background-color: var(--primary-hover-dark);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+        body.dark-mode button.remover {
+            background-color: var(--danger-color-dark);
+        }
+        body.dark-mode button.remover:hover {
+            background-color: var(--danger-hover-dark);
+        }
+        body.dark-mode #botao-imprimir-cupom {
+            background-color: var(--success-color-dark);
+        }
+        body.dark-mode #botao-imprimir-cupom:hover {
+            background-color: var(--success-hover-dark);
+        }
+        body.dark-mode .total-display {
+            color: var(--text-color-dark);
+        }
+        body.dark-mode .carrinho-item strong, body.dark-mode h2, body.dark-mode h3 {
+            color: var(--heading-color-dark);
+        }
+        body.dark-mode li {
+            border-bottom: 1px solid var(--border-color-dark);
+        }
+        body.dark-mode .total-container {
+            border-top: 1px solid var(--border-color-dark);
+        }
+        body.dark-mode .mode-label {
+            color: var(--text-color-dark);
         }
 
         .container {
@@ -59,11 +196,9 @@
         }
 
         .card {
-            background: var(--container-bg);
             padding: 30px;
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow-light);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.5s ease, border-color 0.5s ease;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -71,23 +206,28 @@
 
         .card:hover {
             transform: translateY(-3px);
-            box-shadow: var(--shadow-hover);
         }
 
         h2 {
             font-family: 'Playfair Display', serif;
-            color: var(--heading-color);
             font-size: 2.5em;
             font-weight: 700;
             letter-spacing: 2px;
             margin: 0;
             padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: color 0.5s ease;
+        }
+
+        .h2-text {
             border-bottom: 1px solid var(--border-color);
+            flex-grow: 1;
         }
 
         h3 {
             font-family: 'Playfair Display', serif;
-            color: var(--heading-color);
             font-size: 1.5em;
             font-weight: 400;
             letter-spacing: 1px;
@@ -101,9 +241,10 @@
         }
 
         li {
-            border-bottom: 1px solid var(--border-color);
+            padding: 20px 0;
+            transition: border-bottom 0.5s ease;
         }
-
+        
         li:last-child {
             border-bottom: none;
         }
@@ -129,59 +270,105 @@
         input, select {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--button-border-radius);
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
             font-size: 1em;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: border-color 0.5s ease, background-color 0.5s ease, color 0.5s ease;
         }
         
         input:focus, select:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.1);
         }
 
         button {
-            background-color: var(--primary-color);
-            color: white;
             border: none;
             padding: 15px 25px;
-            border-radius: 8px;
+            border-radius: var(--button-border-radius);
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            transition: background-color 0.5s ease, transform 0.1s ease, box-shadow 0.2s ease, color 0.5s ease;
             font-weight: 600;
             font-size: 1em;
             width: 100%;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .mode-label {
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        
+        /* Botão de alternância (toggle) estilo iOS */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+            margin-left: 10px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--toggle-bg-color-light);
+            transition: .4s;
+            border-radius: 28px;
+        }
+        body.dark-mode .slider {
+            background-color: var(--toggle-bg-color-dark);
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 2px;
+            bottom: 2px;
+            background-color: var(--toggle-circle-color);
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: var(--toggle-shadow-light);
+        }
+        body.dark-mode .slider:before {
+            box-shadow: var(--toggle-shadow-dark);
+        }
+        input:checked + .slider {
+            background-color: var(--toggle-bg-color-checked);
+        }
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
 
         button:hover {
-            background-color: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         button.remover {
-            background-color: var(--danger-color);
             flex-basis: 100px;
             padding: 12px 15px;
             letter-spacing: normal;
-        }
-
-        button.remover:hover {
-            background-color: var(--danger-hover);
         }
         
         .carrinho-item {
             display: flex;
             flex-direction: column;
             gap: 15px;
-            padding: 20px 0;
             align-items: flex-start;
         }
         
@@ -202,25 +389,9 @@
         
         .carrinho-item strong {
             font-size: 1.1em;
-            color: var(--heading-color);
+            transition: color 0.5s ease;
         }
         
-        .carrinho-item .info-detalhes {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .carrinho-item .info-detalhes span {
-            font-size: 0.9em;
-            color: var(--text-light-color);
-        }
-
-        .carrinho-item .info-detalhes strong {
-            font-weight: 500;
-            color: var(--text-color);
-        }
-
         .carrinho-info-valor {
             display: flex;
             align-items: center;
@@ -233,18 +404,10 @@
             padding: 8px;
         }
 
-        .carrinho-info-valor .detalhes-valores {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            font-size: 0.9em;
-        }
-        
         .total-container {
             font-size: 1.1em;
             font-weight: 600;
             margin-top: 25px;
-            border-top: 1px solid var(--border-color);
             padding-top: 20px;
         }
 
@@ -254,8 +417,8 @@
             font-weight: 700; 
             display: flex;
             justify-content: space-between;
-            color: var(--text-color);
             margin-bottom: 12px;
+            transition: color 0.5s ease;
         }
 
         .total-display strong {
@@ -278,19 +441,15 @@
             flex: 1;
         }
         
-        #botao-imprimir-cupom {
-            background-color: var(--success-color);
-        }
-
-        #botao-imprimir-cupom:hover {
-            background-color: var(--success-hover);
-        }
-        
         #instrucoes {
             font-size: 0.9em;
-            color: var(--text-light-color);
+            color: var(--text-light-color-light);
             margin-top: 10px;
             font-style: italic;
+            transition: color 0.5s ease;
+        }
+        body.dark-mode #instrucoes {
+            color: var(--text-light-color-dark);
         }
 
         .total-item-valores {
@@ -301,22 +460,33 @@
 
         .total-item-valores span {
             font-size: 0.9em;
-            color: var(--text-light-color);
+            color: var(--text-light-color-light);
+            transition: color 0.5s ease;
+        }
+        body.dark-mode .total-item-valores span {
+            color: var(--text-light-color-dark);
         }
 
         .total-item-valores strong {
-            color: var(--text-color);
+            color: var(--text-color-light);
+            transition: color 0.5s ease;
+        }
+        body.dark-mode .total-item-valores strong {
+            color: var(--text-color-dark);
         }
         
         .footer-text {
             text-align: center;
             margin-top: 30px;
             padding: 10px 0;
-            color: var(--text-light-color);
+            color: var(--text-light-color-light);
             font-size: 0.8em;
+            transition: color 0.5s ease;
+        }
+        body.dark-mode .footer-text {
+            color: var(--text-light-color-dark);
         }
 
-        /* Estilos para o cupom de impressão */
         .cupom-header { text-align: center; margin-bottom: 10px; }
         .cupom-header p { margin: 0; font-family: 'Poppins', monospace; }
         .cupom-item { border-bottom: 1px dotted #ccc; padding: 3px 0; }
@@ -326,11 +496,19 @@
         #barcode { display: block; margin: 10px auto; width: 100%; }
     </style>
 </head>
-<body>
+<body class="light-mode">
 
     <div class="container">
         <div class="card">
-            <h2>Seu Carrinho de Compras</h2>
+            <h2>
+                <span>Seu Carrinho de Compras</span>
+                <div class="toggle-container">
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </h2>
             
             <div class="form-group">
                 <h3>Adicionar Item Manualmente</h3>
@@ -338,6 +516,11 @@
                     <input type="number" id="valor-livro-manual" placeholder="Valor de Venda" step="0.01">
                     <select id="genero-livro-manual">
                         <option value="" disabled selected>Selecione um Gênero</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                     <select id="loja-cupom-manual">
+                        <option value="" disabled selected>Selecione a Loja</option>
                     </select>
                 </div>
                 <div class="botoes-manual">
@@ -356,8 +539,8 @@
                     <button onclick="buscarCupom()">Buscar Cupom</button>
                     <button onclick="salvarCupom()">Salvar Edições</button>
                 </div>
+                <p id="loja-cupom-info" style="font-size: 0.9em; font-weight: bold;"></p>
             </div>
-
         </div>
         
         <div class="lateral-panel">
@@ -408,6 +591,12 @@
             "Infantil", "HQ", "Gibis", "Revistas", "CDs", "LPs", "DVDs", "Psicologia",
             "Religião", "Espírita"
         ];
+        
+        const lojasDisponiveis = [
+            "sebo só ler sinimbu", "sebo só ler julio", "sebo só ler são leopoldo",
+            "sebo só ler senhor dos passos", "sebo só ler andradas", "conteiner cultura",
+            "sebo online"
+        ];
 
         const carrinhoElemento = document.getElementById('carrinho-compras');
         const valorTotalVendaElemento = document.getElementById('valor-total-venda');
@@ -415,15 +604,35 @@
         const valorTotalTrocaElemento = document.getElementById('valor-total-troca');
         const valorTotalTrocaReduzidaElemento = document.getElementById('valor-total-troca-reduzida');
         const botaoImprimirCupom = document.getElementById('botao-imprimir-cupom');
-
         const termoPesquisaInput = document.getElementById('termo-pesquisa');
-        
         const valorLivroManualInput = document.getElementById('valor-livro-manual');
         const generoLivroManualSelect = document.getElementById('genero-livro-manual');
-        
+        const lojaCupomManualSelect = document.getElementById('loja-cupom-manual');
         const cupomIdInput = document.getElementById('cupom-id-input');
+        const lojaCupomInfo = document.getElementById('loja-cupom-info');
+        const body = document.body;
+        const darkModeToggle = document.getElementById('darkModeToggle');
 
         let cuponsSalvos = JSON.parse(localStorage.getItem('cuponsSalvos')) || {};
+        
+        // --- Dark Mode ---
+        darkModeToggle.addEventListener('change', () => {
+            const isDarkMode = darkModeToggle.checked;
+            if (isDarkMode) {
+                body.classList.add('dark-mode');
+            } else {
+                body.classList.remove('dark-mode');
+            }
+            localStorage.setItem('darkMode', isDarkMode);
+        });
+
+        function loadDarkModePreference() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            darkModeToggle.checked = isDarkMode;
+            if (isDarkMode) {
+                body.classList.add('dark-mode');
+            }
+        }
         
         function gerarIdUnico() {
             return 'CUP' + Math.random().toString(36).substr(2, 9).toUpperCase();
@@ -437,10 +646,27 @@
                 generoLivroManualSelect.appendChild(option);
             });
         }
-
+        
+        function preencherLojasManuais() {
+            const lojaSalva = localStorage.getItem('lojaSelecionada');
+            lojasDisponiveis.sort().forEach(loja => {
+                const option = document.createElement('option');
+                option.value = loja;
+                option.textContent = loja;
+                lojaCupomManualSelect.appendChild(option);
+            });
+            if (lojaSalva) {
+                lojaCupomManualSelect.value = lojaSalva;
+            }
+            lojaCupomManualSelect.addEventListener('change', (event) => {
+                localStorage.setItem('lojaSelecionada', event.target.value);
+            });
+        }
+        
         function adicionarLivroManual() {
             const precoVendaManual = parseFloat(valorLivroManualInput.value);
             const generoManual = generoLivroManualSelect.value;
+            const lojaManual = lojaCupomManualSelect.value;
 
             if (isNaN(precoVendaManual) || precoVendaManual <= 0) {
                 alert("Por favor, preencha um valor de venda válido.");
@@ -451,7 +677,12 @@
                 alert("Por favor, selecione o gênero do item.");
                 return;
             }
-
+            
+            if (!lojaManual) {
+                alert("Por favor, selecione a loja.");
+                return;
+            }
+            
             const valorTrocaLivro = precoVendaManual * porcentagemTrocaLivro;
             const valorTrocaGeral = precoVendaManual * porcentagemTrocaGeral;
             const valorCompraCalculado = precoVendaManual * porcentagemCompra;
@@ -464,7 +695,8 @@
                 precoVenda: precoVendaManual,
                 precoCompra: valorCompraCalculado,
                 valorTrocaLivro: valorTrocaLivro,
-                valorTrocaGeral: valorTrocaGeral
+                valorTrocaGeral: valorTrocaGeral,
+                loja: lojaManual
             };
 
             carrinho.push(livroManual);
@@ -495,6 +727,13 @@
                 document.getElementById(`compra-${livroNoCarrinho.id}`).textContent = livroNoCarrinho.precoCompra.toFixed(2);
             }
         }
+        
+        function atualizarGeneroItem(idDoLivro, novoGenero) {
+            const livroNoCarrinho = carrinho.find(livro => livro.id === idDoLivro);
+            if (livroNoCarrinho) {
+                livroNoCarrinho.genero = novoGenero;
+            }
+        }
 
         function atualizarTotais() {
             let totalVenda = 0;
@@ -523,14 +762,19 @@
 
         function atualizarCarrinho() {
             carrinhoElemento.innerHTML = '';
-
+            
             carrinho.forEach(livro => {
                 const li = document.createElement('li');
                 li.className = 'carrinho-item';
                 li.innerHTML = `
                     <div class="carrinho-info">
                         <strong>${livro.titulo}</strong>
-                        <span style="color: var(--text-light-color);">Gênero: ${livro.genero}</span>
+                        <div class="carrinho-info-valor">
+                            <span>Gênero: </span>
+                            <select onchange="atualizarGeneroItem(${livro.id}, this.value)">
+                                ${generosDisponiveis.sort().map(genero => `<option value="${genero}" ${livro.genero === genero ? 'selected' : ''}>${genero}</option>`).join('')}
+                            </select>
+                        </div>
                         <div class="total-item-valores">
                             <span>Valor de Troca Livro: R$ <strong id="troca-livro-${livro.id}">${livro.valorTrocaLivro.toFixed(2)}</strong></span>
                             <span>Valor de Troca Geral: R$ <strong id="troca-geral-${livro.id}">${livro.valorTrocaGeral.toFixed(2)}</strong></span>
@@ -563,6 +807,12 @@
                 alert("O carrinho está vazio. Adicione itens para gerar o cupom.");
                 return;
             }
+            
+            const lojaSelecionada = lojaCupomManualSelect.value;
+            if (!lojaSelecionada) {
+                alert("Por favor, selecione a loja para emitir o cupom.");
+                return;
+            }
 
             const cupomId = gerarIdUnico();
             const dataAtual = new Date().toLocaleString('pt-BR');
@@ -574,7 +824,8 @@
             cuponsSalvos[cupomId] = {
                 id: cupomId,
                 data: dataAtual,
-                itens: JSON.parse(JSON.stringify(carrinho)), // Cria uma cópia profunda
+                loja: lojaSelecionada,
+                itens: JSON.parse(JSON.stringify(carrinho)),
                 totais: {
                     venda: totalVenda,
                     compra: totalCompra,
@@ -630,7 +881,7 @@
                     #barcode { display: block; margin: 10px auto; width: 100%; }
                 </style>
                 <div class="cupom-header">
-                    <p>LIVRARIA SEBO SÓ LER</p>
+                    <p>LIVRARIA ${lojaSelecionada}</p>
                     <p>-----------------------------------</p>
                     <p>CUPOM DE ENTRADA DE ITENS</p>
                     <p>${dataAtual}</p>
@@ -666,7 +917,6 @@
             printWindow.document.write(conteudoCupom);
             printWindow.document.close();
             
-            // Wait for the SVG to be rendered
             printWindow.onload = () => {
                 JsBarcode(printWindow.document.getElementById("barcode"), cupomId, {
                     format: "CODE128",
@@ -686,10 +936,12 @@
             const cupom = cuponsSalvos[cupomId];
 
             if (cupom) {
-                carrinho = JSON.parse(JSON.stringify(cupom.itens)); // Cria uma cópia para edição
+                carrinho = JSON.parse(JSON.stringify(cupom.itens));
+                lojaCupomInfo.textContent = `Loja do Cupom: ${cupom.loja}`;
                 atualizarCarrinho();
-                alert(`Cupom ${cupomId} carregado com sucesso!`);
+                alert(`Cupom ${cupomId} da loja "${cupom.loja}" carregado com sucesso!`);
             } else {
+                lojaCupomInfo.textContent = '';
                 alert(`Cupom com ID "${cupomId}" não encontrado.`);
             }
         }
@@ -710,7 +962,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            loadDarkModePreference();
             preencherGenerosManuais();
+            preencherLojasManuais();
             atualizarCarrinho();
         });
     </script>
