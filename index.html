@@ -518,8 +518,6 @@
                         <option value="" disabled selected>Selecione um Gênero</option>
                     </select>
                 </div>
-                <div class="form-row">
-                     </div>
                 <div class="botoes-manual">
                     <button onclick="adicionarLivroManual()">Adicionar Item</button>
                     <button id="botao-imprimir-cupom" style="display: none;" onclick="imprimirCupomFiscal()">Imprimir Cupom</button>
@@ -867,6 +865,8 @@
                 `;
             }
 
+            const lojaMaiuscula = lojaSelecionada.toUpperCase();
+
             let conteudoCupom = `
                 <style>
                     body { 
@@ -883,7 +883,7 @@
                     #barcode { display: block; margin: 10px auto; width: 100%; }
                 </style>
                 <div class="cupom-header">
-                    <p>LIVRARIA ${lojaSelecionada}</p>
+                    <p>LIVRARIA ${lojaMaiuscula}</p>
                     <p>-----------------------------------</p>
                     <p>CUPOM DE ENTRADA DE ITENS</p>
                     <p>${dataAtual}</p>
@@ -973,7 +973,7 @@
         });
     </script>
     <div class="footer-text">
-        © M&A 2025 Sebo Só Ler. Todos os direitos reservados.
+        © 2025 M&A Sebo Só Ler. Todos os direitos reservados.
     </div>
 </body>
 </html>
