@@ -519,10 +519,7 @@
                     </select>
                 </div>
                 <div class="form-row">
-                     <select id="loja-cupom-manual">
-                        <option value="" disabled selected>Selecione a Loja</option>
-                    </select>
-                </div>
+                     </div>
                 <div class="botoes-manual">
                     <button onclick="adicionarLivroManual()">Adicionar Item</button>
                     <button id="botao-imprimir-cupom" style="display: none;" onclick="imprimirCupomFiscal()">Imprimir Cupom</button>
@@ -538,6 +535,11 @@
                 <div class="botoes-manual">
                     <button onclick="buscarCupom()">Buscar Cupom</button>
                     <button onclick="salvarCupom()">Salvar Edições</button>
+                </div>
+                 <div class="form-row" style="margin-top: 15px;">
+                     <select id="loja-cupom-manual">
+                        <option value="" disabled selected>Selecione a Loja</option>
+                    </select>
                 </div>
                 <p id="loja-cupom-info" style="font-size: 0.9em; font-weight: bold;"></p>
             </div>
@@ -938,6 +940,7 @@
             if (cupom) {
                 carrinho = JSON.parse(JSON.stringify(cupom.itens));
                 lojaCupomInfo.textContent = `Loja do Cupom: ${cupom.loja}`;
+                lojaCupomManualSelect.value = cupom.loja; // Set the dropdown to the found coupon's store
                 atualizarCarrinho();
                 alert(`Cupom ${cupomId} da loja "${cupom.loja}" carregado com sucesso!`);
             } else {
@@ -950,6 +953,7 @@
             const cupomId = cupomIdInput.value.trim().toUpperCase();
             if (cuponsSalvos[cupomId]) {
                 cuponsSalvos[cupomId].itens = JSON.parse(JSON.stringify(carrinho));
+                cuponsSalvos[cupomId].loja = lojaCupomManualSelect.value; // Save the updated store
                 cuponsSalvos[cupomId].totais.venda = parseFloat(valorTotalVendaElemento.textContent);
                 cuponsSalvos[cupomId].totais.compra = parseFloat(valorTotalCompraElemento.textContent);
                 cuponsSalvos[cupomId].totais.trocaLivro = parseFloat(valorTotalTrocaElemento.textContent);
@@ -969,7 +973,7 @@
         });
     </script>
     <div class="footer-text">
-        © 2025 Sebo Só Ler. Todos os direitos reservados.
+        © M&A 2025 Sebo Só Ler. Todos os direitos reservados.
     </div>
 </body>
 </html>
